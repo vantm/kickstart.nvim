@@ -1,22 +1,36 @@
 -- You can add your own plugins here or in other files in this directory!
---  I promise not to create any merge conflicts in this directory :)
+-- I promise not to create any merge conflicts in this directory :)
 --
 -- See the kickstart.nvim README for more information
 return {
+  -- {
+  --   'justinmk/vim-sneak',
+  --   dependencies = {
+  --     'tpope/vim-repeat',
+  --   },
+  -- },
   {
-    'ggandor/leap.nvim',
-    --version = '',
-    dependencies = {
-      'tpope/vim-repeat',
+    'folke/flash.nvim',
+    event = 'VeryLazy',
+    opts = {},
+    keys = {
+      {
+        's',
+        mode = { 'n', 'x', 'o' },
+        function()
+          require('flash').jump()
+        end,
+        desc = 'Flash',
+      },
+      {
+        'B',
+        mode = { 'n', 'x', 'o' },
+        function()
+          require('flash').treesitter()
+        end,
+        desc = 'Flash Treesitter',
+      },
     },
-    init = function()
-      local function map(mode, l, r, opts)
-        opts = opts or {}
-        vim.keymap.set(mode, l, r, opts)
-      end
-
-      map('n', 's', '<Plug>(leap)', { desc = 'Leap' })
-    end,
   },
   { 'mbbill/undotree' },
   {
