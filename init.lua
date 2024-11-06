@@ -91,7 +91,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.o`
@@ -102,7 +102,7 @@ vim.g.have_nerd_font = false
 vim.o.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
--- vim.o.relativenumber = true
+vim.opt.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.o.mouse = 'a'
@@ -114,9 +114,9 @@ vim.o.showmode = false
 --  Schedule the setting after `UiEnter` because it can increase startup-time.
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
-vim.schedule(function()
-  vim.o.clipboard = 'unnamedplus'
-end)
+--vim.schedule(function()
+--  vim.opt.clipboard = 'unnamedplus'
+--end)
 
 -- Enable break indent
 vim.o.breakindent = true
@@ -166,6 +166,21 @@ vim.o.scrolloff = 10
 -- See `:help 'confirm'`
 vim.o.confirm = true
 
+-- Control line the wrap setting
+vim.opt.wrap = false
+
+-- Replace spaces by tabs
+vim.opt.expandtab = true
+vim.opt.shiftwidth = 4
+
+-- Vertical lines
+
+vim.opt.colorcolumn = '80,120'
+
+-- Plugins options
+
+vim.g.disable_autoformat = true
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -204,6 +219,64 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 -- vim.keymap.set("n", "<C-S-l>", "<C-w>L", { desc = "Move window to the right" })
 -- vim.keymap.set("n", "<C-S-j>", "<C-w>J", { desc = "Move window to the lower" })
 -- vim.keymap.set("n", "<C-S-k>", "<C-w>K", { desc = "Move window to the upper" })
+
+-- Custom keymaps
+
+-- Resize buffers
+vim.keymap.set('n', '<C-Up>', ':resize -3<cr>', { desc = 'Horizontally resize' })
+vim.keymap.set('n', '<C-Down>', ':resize +3<cr>', { desc = 'Horizontally resize' })
+vim.keymap.set('n', '<C-Left>', ':vertical resize -3<cr>', { desc = 'Verically resize' })
+vim.keymap.set('n', '<C-Right>', ':vertical resize +3<cr>', { desc = 'Verically resize' })
+
+-- Save buffer
+vim.keymap.set('n', '<leader>w', ':w<cr>', { desc = 'Save the current buffer' })
+
+-- Close buffers
+vim.keymap.set('n', '<leader>x', ':bd<cr>', { desc = 'Close the current buffer' })
+
+-- Better paste
+vim.keymap.set('n', '<leader>p', '"+p', { desc = "Paste the content in the registry '+' after the current cursor" })
+vim.keymap.set('v', '<leader>p', '"+p', { desc = "Paste the content in the registry '+' after the current cursor" })
+vim.keymap.set('n', '<leader>P', '"+P', { desc = "Paste the content in the registry '+' before the current cursor" })
+vim.keymap.set('v', '<leader>P', '"+P', { desc = "Paste the content in the registry '+' before the current cursor" })
+vim.keymap.set('n', '<leader>y', '"+y', { desc = "Yank into the registry '+'" })
+vim.keymap.set('v', '<leader>y', '"+y', { desc = "Yank into the registry '+'" })
+vim.keymap.set('n', '<leader>Y', '"+Y', { desc = "Yank the current line into the registry '+'" })
+vim.keymap.set('v', '<leader>Y', '"+Y', { desc = "Yank the current line into the registry '+'" })
+
+-- Stay in indent mode
+vim.keymap.set('v', '<', '<gv', { desc = 'Decrease indentation' })
+vim.keymap.set('v', '>', '>gv', { desc = 'Increase indentation' })
+
+-- Better replace
+vim.keymap.set('n', 'S', '"_diwP', { desc = 'Replace word under the cursor' })
+vim.keymap.set('v', 'S', '"_dp', { desc = '' })
+
+-- Auto center after finding/moving
+vim.keymap.set('n', 'n', 'nzzzv')
+vim.keymap.set('n', 'N', 'Nzzzv')
+vim.keymap.set('n', '<C-d>', '<C-d>zz')
+vim.keymap.set('n', '<C-u>', '<C-u>zz')
+
+-- Better join lines
+vim.keymap.set('n', 'J', 'mzJ`z')
+vim.keymap.set('v', 'J', 'mzJ`z')
+
+-- Move line
+vim.keymap.set('n', '<A-k>', ':m-2<CR>==', { desc = 'Move the current line above' })
+vim.keymap.set('n', '<A-j>', ':m+1<CR>==', { desc = 'Move the current line below' })
+vim.keymap.set('v', '<A-k>', ":m'<-2<CR>gv=gv", { desc = 'Move the selected lines above' })
+vim.keymap.set('v', '<A-j>', ":m'>+1<CR>gv=gv", { desc = 'Move the selected lines below' })
+vim.keymap.set('i', '<A-k>', '<C-o>:m-2<CR><C-o>==', { desc = 'Move the current line above' })
+vim.keymap.set('i', '<A-j>', '<C-o>:m+1<CR><C-o>==', { desc = 'Move the current line below' })
+
+-- AI chats
+vim.keymap.set('n', '<leader>ac', ':CodeCompanionChat<cr>', { desc = '[C]hat' })
+vim.keymap.set('n', '<leader>aa', ':CodeCompanionActions<cr>', { desc = '[A]ctions' })
+vim.keymap.set('n', '<leader>ai', ':CodeCompanion<cr>', { desc = '[I]nline Prompt' })
+vim.keymap.set('v', '<leader>ac', ':CodeCompanionChat<cr>', { desc = '[C]hat' })
+vim.keymap.set('v', '<leader>aa', ':CodeCompanionActions<cr>', { desc = '[A]ctions' })
+vim.keymap.set('v', '<leader>ai', ':CodeCompanion<cr>', { desc = '[I]nline Prompt' })
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -344,9 +417,14 @@ require('lazy').setup({
 
       -- Document existing key chains
       spec = {
-        { '<leader>s', group = '[S]earch' },
+        { '<leader>l', group = '[L]anguage', mode = { 'n', 'x' } },
+        { '<leader>d', group = '[D]ocument' },
+        { '<leader>r', group = '[R]ename' },
+        { '<leader>f', group = '[F]ind' },
+        { '<leader>w', group = '[W]orkspace' },
         { '<leader>t', group = '[T]oggle' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
+        { '<leader>a', group = '[A]I Assistant', mode = { 'n', 'v' } },
       },
     },
   },
@@ -426,15 +504,15 @@ require('lazy').setup({
 
       -- See `:help telescope.builtin`
       local builtin = require 'telescope.builtin'
-      vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
-      vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
-      vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
-      vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
-      vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
-      vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
-      vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
-      vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
-      vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
+      vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = '[F]ind [H]elp' })
+      vim.keymap.set('n', '<leader>fk', builtin.keymaps, { desc = '[F]ind [K]eymaps' })
+      vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = '[F]ind [F]iles' })
+      vim.keymap.set('n', '<leader>fs', builtin.builtin, { desc = '[F]ind [S]elect Telescope' })
+      vim.keymap.set('n', '<leader>fw', builtin.grep_string, { desc = '[F]ind current [W]ord' })
+      vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = '[F]ind by [G]rep' })
+      vim.keymap.set('n', '<leader>fd', builtin.diagnostics, { desc = '[F]ind [D]iagnostics' })
+      vim.keymap.set('n', '<leader>fr', builtin.resume, { desc = '[F]ind [R]esume' })
+      vim.keymap.set('n', '<leader>f.', builtin.oldfiles, { desc = '[F]ind Recent Files ("." for repeat)' })
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
 
       -- Slightly advanced example of overriding default behavior and theme
@@ -448,7 +526,7 @@ require('lazy').setup({
 
       -- It's also possible to pass additional configuration options.
       --  See `:help telescope.builtin.live_grep()` for information about particular keys
-      vim.keymap.set('n', '<leader>s/', function()
+      vim.keymap.set('n', '<leader>f/', function()
         builtin.live_grep {
           grep_open_files = true,
           prompt_title = 'Live Grep in Open Files',
@@ -456,7 +534,7 @@ require('lazy').setup({
       end, { desc = '[S]earch [/] in Open Files' })
 
       -- Shortcut for searching your Neovim configuration files
-      vim.keymap.set('n', '<leader>sn', function()
+      vim.keymap.set('n', '<leader>fn', function()
         builtin.find_files { cwd = vim.fn.stdpath 'config' }
       end, { desc = '[S]earch [N]eovim files' })
     end,
@@ -491,8 +569,11 @@ require('lazy').setup({
 
       -- Allows extra capabilities provided by blink.cmp
       'saghen/blink.cmp',
+
+      -- OmniSharp extended LSP handlers
+      'Hoffs/omnisharp-extended-lsp.nvim',
     },
-    config = function()
+    config = function(x)
       -- Brief aside: **What is LSP?**
       --
       -- LSP is an initialism you've probably heard, but might not understand what it is.
@@ -522,9 +603,12 @@ require('lazy').setup({
       --    That is to say, every time a new file is opened that is associated with
       --    an lsp (for example, opening `main.rs` is associated with `rust_analyzer`) this
       --    function will be executed to configure the current buffer
+
       vim.api.nvim_create_autocmd('LspAttach', {
         group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
         callback = function(event)
+          print('Default LSP attached to buffer ' .. event.buf)
+
           -- NOTE: Remember that Lua is a real programming language, and as such it is possible
           -- to define small helper and utility functions so you don't have to repeat yourself.
           --
@@ -535,42 +619,42 @@ require('lazy').setup({
             vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
           end
 
-          -- Rename the variable under your cursor.
-          --  Most Language Servers support renaming across files, etc.
-          map('grn', vim.lsp.buf.rename, '[R]e[n]ame')
-
-          -- Execute a code action, usually your cursor needs to be on top of an error
-          -- or a suggestion from your LSP for this to activate.
-          map('gra', vim.lsp.buf.code_action, '[G]oto Code [A]ction', { 'n', 'x' })
-
-          -- Find references for the word under your cursor.
-          map('grr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
-
-          -- Jump to the implementation of the word under your cursor.
-          --  Useful when your language has ways of declaring types without an actual implementation.
-          map('gri', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
-
           -- Jump to the definition of the word under your cursor.
           --  This is where a variable was first declared, or where a function is defined, etc.
           --  To jump back, press <C-t>.
-          map('grd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
+          map('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
 
-          -- WARN: This is not Goto Definition, this is Goto Declaration.
-          --  For example, in C this would take you to the header.
-          map('grD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
+          -- Find references for the word under your cursor.
+          map('gr', require('telescope.builtin').lsp_definitions, '[G]oto [R]eferences')
 
-          -- Fuzzy find all the symbols in your current document.
-          --  Symbols are things like variables, functions, types, etc.
-          map('gO', require('telescope.builtin').lsp_document_symbols, 'Open Document Symbols')
-
-          -- Fuzzy find all the symbols in your current workspace.
-          --  Similar to document symbols, except searches over your entire project.
-          map('gW', require('telescope.builtin').lsp_dynamic_workspace_symbols, 'Open Workspace Symbols')
+          -- Jump to the implementation of the word under your cursor.
+          --  Useful when your language has ways of declaring types without an actual implementation.
+          map('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
 
           -- Jump to the type of the word under your cursor.
           --  Useful when you're not sure what type a variable is and you want to see
           --  the definition of its *type*, not where it was *defined*.
-          map('grt', require('telescope.builtin').lsp_type_definitions, '[G]oto [T]ype Definition')
+          map('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
+
+          -- Fuzzy find all the symbols in your current document.
+          --  Symbols are things like variables, functions, types, etc.
+          map('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
+
+          -- Fuzzy find all the symbols in your current workspace.
+          --  Similar to document symbols, except searches over your entire project.
+          map('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
+
+          -- Rename the variable under your cursor.
+          --  Most Language Servers support renaming across files, etc.
+          map('<leader>lr', vim.lsp.buf.rename, '[L]anguage [R]ename')
+
+          -- Execute a code action, usually your cursor needs to be on top of an error
+          -- or a suggestion from your LSP for this to activate.
+          map('<leader>la', vim.lsp.buf.code_action, '[L]anguage [A]ction', { 'n', 'x' })
+
+          -- WARN: This is not Goto Definition, this is Goto Declaration.
+          --  For example, in C this would take you to the header.
+          map('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
 
           -- This function resolves a difference between neovim nightly (version 0.11) and stable (version 0.10)
           ---@param client vim.lsp.Client
@@ -623,6 +707,25 @@ require('lazy').setup({
               vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
             end, '[T]oggle Inlay [H]ints')
           end
+        end,
+      })
+
+      vim.api.nvim_create_autocmd('LspAttach', {
+        group = vim.api.nvim_create_augroup('omnisharp-extended-lsp-attach', { clear = true }),
+        pattern = { '*.cs', '*.vb', '*.cshtml', '*.vbhtml', '*.razor' },
+        callback = function(event)
+          print('Omnisharp extended LSP attached to buffer ' .. event.buf)
+
+          local map = function(keys, func, desc, mode)
+            mode = mode or 'n'
+            vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
+          end
+
+          -- Overwrite the default LSP mappings with the ones provided by omnisharp-extended
+          map('gd', require('omnisharp_extended').telescope_lsp_definition, '[G]oto [D]efinition')
+          map('gr', require('omnisharp_extended').telescope_lsp_references, '[G]oto [R]eferences')
+          map('gI', require('omnisharp_extended').telescope_lsp_implementation, '[G]oto [I]mplementation')
+          map('<leader>D', require('omnisharp_extended').telescope_lsp_type_definition, 'Type [D]efinition')
         end,
       })
 
@@ -698,6 +801,58 @@ require('lazy').setup({
             },
           },
         },
+
+        omnisharp = {
+          cmd = { 'omnisharp' },
+
+          handlers = {
+            ['textDocument/definition'] = require('omnisharp_extended').definition_handler,
+            ['textDocument/typeDefinition'] = require('omnisharp_extended').type_definition_handler,
+            ['textDocument/references'] = require('omnisharp_extended').references_handler,
+            ['textDocument/implementation'] = require('omnisharp_extended').implementation_handler,
+          },
+
+          settings = {
+            FormattingOptions = {
+              -- Enables support for reading code style, naming convention and analyzer
+              -- settings from .editorconfig.
+              EnableEditorConfigSupport = true,
+              -- Specifies whether 'using' directives should be grouped and sorted during
+              -- document formatting.
+              OrganizeImports = nil,
+            },
+            MsBuild = {
+              -- If true, MSBuild project system will only load projects for files that
+              -- were opened in the editor. This setting is useful for big C# codebases
+              -- and allows for faster initialization of code navigation features only
+              -- for projects that are relevant to code that is being edited. With this
+              -- setting enabled OmniSharp may load fewer projects and may thus display
+              -- incomplete reference lists for symbols.
+              LoadProjectsOnDemand = nil,
+            },
+            RoslynExtensionsOptions = {
+              -- Enables support for roslyn analyzers, code fixes and rulesets.
+              EnableAnalyzersSupport = nil,
+              -- Enables support for showing unimported types and unimported extension
+              -- methods in completion lists. When committed, the appropriate using
+              -- directive will be added at the top of the current file. This option can
+              -- have a negative impact on initial completion responsiveness,
+              -- particularly for the first few completion sessions after opening a
+              -- solution.
+              EnableImportCompletion = nil,
+              -- Only run analyzers against open files when 'enableRoslynAnalyzers' is
+              -- true
+              AnalyzeOpenDocumentsOnly = nil,
+
+              EnableDecompilationSupport = true,
+            },
+            Sdk = {
+              -- Specifies whether to include preview versions of the .NET SDK when
+              -- determining which version to use for project loading.
+              IncludePrereleases = true,
+            },
+          },
+        },
       }
 
       -- Ensure the servers and tools above are installed
@@ -742,17 +897,21 @@ require('lazy').setup({
     cmd = { 'ConformInfo' },
     keys = {
       {
-        '<leader>f',
+        '<leader>lf',
         function()
           require('conform').format { async = true, lsp_format = 'fallback' }
         end,
         mode = '',
-        desc = '[F]ormat buffer',
+        desc = '[L]anguage [F]ormat',
       },
     },
     opts = {
       notify_on_error = false,
       format_on_save = function(bufnr)
+        -- Disable with a global or buffer-local variable
+        if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
+          return
+        end
         -- Disable "format_on_save lsp_fallback" for languages that don't
         -- have a well standardized coding style. You can add additional
         -- languages here or re-enable it for the disabled ones.
@@ -773,6 +932,19 @@ require('lazy').setup({
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
         -- javascript = { "prettierd", "prettier", stop_after_first = true },
+
+        python = { 'autopep8' },
+
+        html = { 'prettier' },
+        css = { 'prettier' },
+        scss = { 'prettier' },
+        sass = { 'prettier' },
+        javascript = { 'prettier' },
+        typescript = { 'prettier' },
+        json = { 'prettier' },
+        yaml = { 'prettier' },
+
+        haskell = { 'fourmolu' },
       },
     },
   },
@@ -881,20 +1053,41 @@ require('lazy').setup({
     -- change the command in the config to whatever the name of that colorscheme is.
     --
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    'folke/tokyonight.nvim',
+    -- 'folke/tokyonight.nvim',
+    'ellisonleao/gruvbox.nvim',
+    -- 'catppuccin/nvim',
     priority = 1000, -- Make sure to load this before all the other start plugins.
     config = function()
       ---@diagnostic disable-next-line: missing-fields
-      require('tokyonight').setup {
-        styles = {
-          comments = { italic = false }, -- Disable italics in comments
+      -- require('tokyonight').setup {
+      --   styles = {
+      --      comments = { italic = false }, -- Disable italics in comments
+      --   },
+      -- }
+
+      require('gruvbox').setup {
+        disable_italics = true,
+        disable_background = true,
+        transparent_mode = true,
+        italic = {
+          strings = false,
+          emphasis = false,
+          comments = true,
+          operators = false,
+          folds = false,
         },
       }
 
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
+      -- vim.cmd.colorscheme 'tokyonight-night'
+
+      vim.cmd.colorscheme 'gruvbox'
+
+      -- vim.cmd.colorscheme 'catppuccin-mocha'
+
+      vim.o.background = 'dark'
     end,
   },
 
@@ -917,7 +1110,18 @@ require('lazy').setup({
       -- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
       -- - sd'   - [S]urround [D]elete [']quotes
       -- - sr)'  - [S]urround [R]eplace [)] [']
-      require('mini.surround').setup()
+      require('mini.surround').setup {
+        -- I customized mappings
+        mappings = {
+          add = 'ys', -- Add surrounding in Normal and Visual modes
+          delete = 'ds', -- Delete surrounding
+          find = 'gs', -- Find surrounding (to the right)
+          find_left = 'gS', -- Find surrounding (to the left)
+          highlight = 'ghs', -- Highlight surrounding
+          replace = 'cs', -- Replace surrounding
+          update_n_lines = '', -- Udpate `n_lines`
+        },
+      }
 
       -- Simple and easy statusline.
       --  You could remove this setup call if you don't like it,
@@ -973,18 +1177,18 @@ require('lazy').setup({
   --  Here are some example plugins that I've included in the Kickstart repository.
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
-  -- require 'kickstart.plugins.debug',
-  -- require 'kickstart.plugins.indent_line',
-  -- require 'kickstart.plugins.lint',
-  -- require 'kickstart.plugins.autopairs',
-  -- require 'kickstart.plugins.neo-tree',
-  -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
+  require 'kickstart.plugins.debug',
+  require 'kickstart.plugins.indent_line',
+  require 'kickstart.plugins.lint',
+  require 'kickstart.plugins.autopairs',
+  require 'kickstart.plugins.neo-tree',
+  require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
   --
   -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
   -- Or use telescope!
