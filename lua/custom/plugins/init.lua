@@ -3,12 +3,6 @@
 --
 -- See the kickstart.nvim README for more information
 return {
-  -- {
-  --   'justinmk/vim-sneak',
-  --   dependencies = {
-  --     'tpope/vim-repeat',
-  --   },
-  -- },
   {
     'folke/flash.nvim',
     event = 'VeryLazy',
@@ -35,11 +29,14 @@ return {
   { 'mbbill/undotree' },
   {
     'ThePrimeagen/harpoon',
+    branch = 'harpoon2',
     dependencies = {
       'nvim-lua/plenary.nvim',
     },
     init = function()
-      local harpoon = require 'harpoon.ui'
+      local harpoon = require 'harpoon'
+
+      harpoon:setup()
 
       local function map(mode, l, r, opts)
         opts = opts or {}
@@ -47,18 +44,61 @@ return {
       end
 
       map('n', '<leader>he', function()
-        harpoon.toggle_quick_menu()
+        harpoon.ui:toggle_quick_menu(harpoon:list(), {
+          ui_width_ratio = 0.8,
+        })
       end, { desc = '[H]arpoon [E]ditor' })
 
       map('n', '<leader>a', function()
-        harpoon.add_file()
+        harpoon:list():add()
       end, { desc = '[A]dd to Harpoon' })
 
       for i = 1, 9 do
         map('n', '<leader>' .. i, function()
-          harpoon.nav_file(1)
+          harpoon:list():select(i)
         end, { desc = 'Harpoon: Navigate to [' .. i .. ']' })
       end
+
+      map({ 'n', 'i' }, '<C-j>', function()
+        harpoon:list():next()
+      end, { desc = 'Next buffer stored within Harpoon list' })
+
+      map({ 'n', 'i' }, '<C-k>', function()
+        harpoon:list():prev()
+      end, { desc = 'Previous buffer stored within Harpoon list' })
+    end,
+  },
+  {
+    'akinsho/toggleterm.nvim',
+    version = '*',
+    opts = {},
+    init = function()
+      require('toggleterm').setup()
+
+      local function map(mode, l, r, opts)
+        opts = opts or {}
+        vim.keymap.set(mode, l, r, opts)
+      end
+
+      local Terminal = require('toggleterm.terminal').Terminal
+      local lazygit = Terminal:new {
+        cmd = 'lazygit',
+        hidden = true,
+        direction = 'float',
+        -- function to run on opening the terminal
+        on_open = function(term)
+          vim.cmd 'startinsert!'
+          vim.api.nvim_buf_set_keymap(term.bufnr, 'n', 'q', '<cmd>close<CR>', { noremap = true, silent = true })
+        end,
+        -- function to run on closing the terminal
+        on_close = function()
+          vim.cmd 'startinsert!'
+        end,
+      }
+
+      map('n', '<leader>g', function()
+        lazygit:toggle()
+      end, { desc = 'Open Lazygit' })
     end,
   },
 }
