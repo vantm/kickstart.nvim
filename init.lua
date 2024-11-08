@@ -196,10 +196,10 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 -- Custom keymaps
 --
 -- Resize buffers
-vim.keymap.set('n', '<C-Up>', ':resize -5<cr>', { desc = 'Horizontally resize -5' })
-vim.keymap.set('n', '<C-Down>', ':resize +5<cr>', { desc = 'Horizontally resize +5' })
-vim.keymap.set('n', '<C-Left>', ':vertical resize -5<cr>', { desc = 'Verically resize -5' })
-vim.keymap.set('n', '<C-Right>', ':vertical resize +5<cr>', { desc = 'Verically resize +5' })
+vim.keymap.set('n', '<C-Up>', ':resize -3<cr>', { desc = 'Horizontally resize' })
+vim.keymap.set('n', '<C-Down>', ':resize +3<cr>', { desc = 'Horizontally resize' })
+vim.keymap.set('n', '<C-Left>', ':vertical resize -3<cr>', { desc = 'Verically resize' })
+vim.keymap.set('n', '<C-Right>', ':vertical resize +3<cr>', { desc = 'Verically resize' })
 
 -- Save buffer
 vim.keymap.set('n', '<leader>w', ':w<cr>', { desc = 'Save the current buffer' })
