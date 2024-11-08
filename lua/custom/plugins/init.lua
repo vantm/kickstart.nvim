@@ -21,7 +21,14 @@ return {
   {
     'folke/flash.nvim',
     event = 'VeryLazy',
-    opts = {},
+    opts = {
+      label = {
+        style = 'inline',
+      },
+      highlight = {
+        backdrop = false,
+      },
+    },
     keys = {
       {
         's',

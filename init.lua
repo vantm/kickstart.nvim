@@ -160,6 +160,10 @@ vim.opt.scrolloff = 10
 -- Control line the wrap setting
 vim.opt.wrap = false
 
+-- Replace spaces by tabs
+vim.opt.expandtab = true
+vim.opt.shiftwidth = 4
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -946,9 +950,9 @@ require('lazy').setup({
           delete = 'ds', -- Delete surrounding
           find = 'gs', -- Find surrounding (to the right)
           find_left = 'gS', -- Find surrounding (to the left)
-          highlight = 'hs', -- Highlight surrounding
+          highlight = 'ghs', -- Highlight surrounding
           replace = 'cs', -- Replace surrounding
-          update_n_lines = 'msu', -- Udpate `n_lines`
+          update_n_lines = '', -- Udpate `n_lines`
         },
       }
 
