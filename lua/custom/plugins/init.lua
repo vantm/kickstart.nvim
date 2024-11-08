@@ -2,6 +2,19 @@
 -- I promise not to create any merge conflicts in this directory :)
 --
 -- See the kickstart.nvim README for more information
+
+local function setup_pwsh()
+  vim.cmd [[
+    let &shell = executable('pwsh') ? 'pwsh' : 'powershell'
+    let &shellcmdflag = '-NoLogo -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$PSDefaultParameterValues[''Out-File:Encoding'']=''utf8'';Remove-Alias -Force -ErrorAction SilentlyContinue tee;'
+    let &shellredir = '2>&1 | %%{ "$_" } | Out-File %s; exit $LastExitCode'
+    let &shellpipe  = '2>&1 | %%{ "$_" } | tee %s; exit $LastExitCode'
+    set shellquote= shellxquote=
+  ]]
+end
+
+setup_pwsh()
+
 return {
   {
     'folke/flash.nvim',
@@ -71,9 +84,10 @@ return {
   {
     'akinsho/toggleterm.nvim',
     version = '*',
-    opts = {},
     init = function()
-      require('toggleterm').setup()
+      require('toggleterm').setup {
+        open_mapping = [[<C-t>]],
+      }
 
       local function map(mode, l, r, opts)
         opts = opts or {}
