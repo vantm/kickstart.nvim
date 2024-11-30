@@ -25,8 +25,11 @@ return {
       label = {
         style = 'inline',
       },
-      highlight = {
-        backdrop = false,
+      highlight = { backdrop = false },
+      modes = {
+        char = {
+          highlight = { backdrop = false },
+        },
       },
     },
     keys = {

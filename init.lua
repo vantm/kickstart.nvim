@@ -164,6 +164,10 @@ vim.opt.wrap = false
 vim.opt.expandtab = true
 vim.opt.shiftwidth = 4
 
+-- Plugins options
+
+vim.g.disable_autoformat = true
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -209,7 +213,7 @@ vim.keymap.set('n', '<C-Right>', ':vertical resize +3<cr>', { desc = 'Verically 
 vim.keymap.set('n', '<leader>w', ':w<cr>', { desc = 'Save the current buffer' })
 
 -- Close buffers
-vim.keymap.set('n', '<S-q>', ':bd!<cr>', { desc = 'Ignore change and close the current buffer' })
+vim.keymap.set('n', '<leader>x', ':bd<cr>', { desc = 'Close the current buffer' })
 
 -- Better paste
 vim.keymap.set('n', '<leader>p', '"+p', { desc = "Paste the content in the registry '+' after the current cursor" })
@@ -523,6 +527,9 @@ require('lazy').setup({
 
       -- Allows extra capabilities provided by nvim-cmp
       'hrsh7th/cmp-nvim-lsp',
+
+      -- OmniSharp extended LSP handlers
+      'Hoffs/omnisharp-extended-lsp.nvim',
     },
     config = function()
       -- Brief aside: **What is LSP?**
@@ -554,6 +561,30 @@ require('lazy').setup({
       --    That is to say, every time a new file is opened that is associated with
       --    an lsp (for example, opening `main.rs` is associated with `rust_analyzer`) this
       --    function will be executed to configure the current buffer
+
+      local csharp = function(ext)
+        return '%.' .. ext .. '$'
+      end
+
+      local patterns = {
+        csharp 'cs',
+        csharp 'vb',
+        csharp 'cshtml',
+        csharp 'vbhtml',
+        csharp 'razor',
+      }
+
+      local function is_csharp(name)
+        for i = 1, #patterns do
+          local pattern = patterns[i]
+          local is_match = string.match(name, pattern)
+          if is_match then
+            return true
+          end
+        end
+        return false
+      end
+
       vim.api.nvim_create_autocmd('LspAttach', {
         group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
         callback = function(event)
@@ -567,22 +598,43 @@ require('lazy').setup({
             vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
           end
 
-          -- Jump to the definition of the word under your cursor.
-          --  This is where a variable was first declared, or where a function is defined, etc.
-          --  To jump back, press <C-t>.
-          map('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
+          local is_a_csharp_file = is_csharp(event.match)
 
-          -- Find references for the word under your cursor.
-          map('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
+          if is_a_csharp_file then
+            -- Jump to the definition of the word under your cursor.
+            --  This is where a variable was first declared, or where a function is defined, etc.
+            --  To jump back, press <C-t>.
+            map('gd', require('omnisharp_extended').telescope_lsp_definition, '[G]oto [D]efinition')
 
-          -- Jump to the implementation of the word under your cursor.
-          --  Useful when your language has ways of declaring types without an actual implementation.
-          map('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
+            -- Find references for the word under your cursor.
+            map('gr', require('omnisharp_extended').telescope_lsp_references, '[G]oto [R]eferences')
 
-          -- Jump to the type of the word under your cursor.
-          --  Useful when you're not sure what type a variable is and you want to see
-          --  the definition of its *type*, not where it was *defined*.
-          map('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
+            -- Jump to the implementation of the word under your cursor.
+            --  Useful when your language has ways of declaring types without an actual implementation.
+            map('gI', require('omnisharp_extended').telescope_lsp_implementation, '[G]oto [I]mplementation')
+
+            -- Jump to the type of the word under your cursor.
+            --  Useful when you're not sure what type a variable is and you want to see
+            --  the definition of its *type*, not where it was *defined*.
+            map('<leader>D', require('omnisharp_extended').telescope_lsp_type_definition, 'Type [D]efinition')
+          else
+            -- Jump to the definition of the word under your cursor.
+            --  This is where a variable was first declared, or where a function is defined, etc.
+            --  To jump back, press <C-t>.
+            map('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
+
+            -- Find references for the word under your cursor.
+            map('gr', require('telescope.builtin').lsp_definitions, '[G]oto [R]eferences')
+
+            -- Jump to the implementation of the word under your cursor.
+            --  Useful when your language has ways of declaring types without an actual implementation.
+            map('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
+
+            -- Jump to the type of the word under your cursor.
+            --  Useful when you're not sure what type a variable is and you want to see
+            --  the definition of its *type*, not where it was *defined*.
+            map('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
+          end
 
           -- Fuzzy find all the symbols in your current document.
           --  Symbols are things like variables, functions, types, etc.
@@ -699,6 +751,58 @@ require('lazy').setup({
             },
           },
         },
+
+        omnisharp = {
+          cmd = { 'omnisharp' },
+
+          handlers = {
+            ['textDocument/definition'] = require('omnisharp_extended').definition_handler,
+            ['textDocument/typeDefinition'] = require('omnisharp_extended').type_definition_handler,
+            ['textDocument/references'] = require('omnisharp_extended').references_handler,
+            ['textDocument/implementation'] = require('omnisharp_extended').implementation_handler,
+          },
+
+          settings = {
+            FormattingOptions = {
+              -- Enables support for reading code style, naming convention and analyzer
+              -- settings from .editorconfig.
+              EnableEditorConfigSupport = true,
+              -- Specifies whether 'using' directives should be grouped and sorted during
+              -- document formatting.
+              OrganizeImports = nil,
+            },
+            MsBuild = {
+              -- If true, MSBuild project system will only load projects for files that
+              -- were opened in the editor. This setting is useful for big C# codebases
+              -- and allows for faster initialization of code navigation features only
+              -- for projects that are relevant to code that is being edited. With this
+              -- setting enabled OmniSharp may load fewer projects and may thus display
+              -- incomplete reference lists for symbols.
+              LoadProjectsOnDemand = nil,
+            },
+            RoslynExtensionsOptions = {
+              -- Enables support for roslyn analyzers, code fixes and rulesets.
+              EnableAnalyzersSupport = nil,
+              -- Enables support for showing unimported types and unimported extension
+              -- methods in completion lists. When committed, the appropriate using
+              -- directive will be added at the top of the current file. This option can
+              -- have a negative impact on initial completion responsiveness,
+              -- particularly for the first few completion sessions after opening a
+              -- solution.
+              EnableImportCompletion = nil,
+              -- Only run analyzers against open files when 'enableRoslynAnalyzers' is
+              -- true
+              AnalyzeOpenDocumentsOnly = nil,
+
+              EnableDecompilationSupport = true,
+            },
+            Sdk = {
+              -- Specifies whether to include preview versions of the .NET SDK when
+              -- determining which version to use for project loading.
+              IncludePrereleases = true,
+            },
+          },
+        },
       }
 
       -- Ensure the servers and tools above are installed
@@ -749,6 +853,10 @@ require('lazy').setup({
     opts = {
       notify_on_error = false,
       format_on_save = function(bufnr)
+        -- Disable with a global or buffer-local variable
+        if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
+          return
+        end
         -- Disable "format_on_save lsp_fallback" for languages that don't
         -- have a well standardized coding style. You can add additional
         -- languages here or re-enable it for the disabled ones.
