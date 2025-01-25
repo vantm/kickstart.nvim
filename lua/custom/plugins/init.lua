@@ -55,14 +55,17 @@ return {
   {
     'ThePrimeagen/harpoon',
     event = 'BufEnter',
-    branch = 'harpoon2',
+    branch = 'master',
+    --branch = 'harpoon2',
     dependencies = {
       'nvim-lua/plenary.nvim',
     },
     init = function()
-      local harpoon = require 'harpoon'
-
-      harpoon:setup()
+      require('harpoon').setup {
+        menu = {
+          width = vim.api.nvim_win_get_width(0) - 8,
+        },
+      }
 
       local function map(mode, l, r, opts)
         opts = opts or {}
@@ -70,33 +73,65 @@ return {
       end
 
       map('n', '<leader>he', function()
-        harpoon.ui:toggle_quick_menu(harpoon:list(), {
-          ui_width_ratio = 0.8,
-        })
+        require('harpoon.ui').toggle_quick_menu {}
       end, { desc = '[H]arpoon [E]ditor' })
 
       map('n', '<leader>a', function()
-        harpoon:list():add()
+        require('harpoon.mark').add_file()
       end, { desc = '[A]dd to Harpoon' })
 
       for i = 1, 9 do
         map('n', '<leader>' .. i, function()
-          harpoon:list():select(i)
+          require('harpoon.ui').nav_file(i)
         end, { desc = 'Harpoon: Navigate to [' .. i .. ']' })
       end
 
       map({ 'n', 'i' }, '<C-j>', function()
-        harpoon:list():next {
-          ui_nav_wrap = true,
-        }
+        require('harpoon.ui').nav_next()
       end, { desc = 'Next buffer stored within Harpoon list' })
 
       map({ 'n', 'i' }, '<C-k>', function()
-        harpoon:list():prev {
-          ui_nav_wrap = true,
-        }
+        require('harpoon.ui').nav_prev()
       end, { desc = 'Previous buffer stored within Harpoon list' })
     end,
+    -- init = function()
+    --   local harpoon = require 'harpoon'
+    --
+    --   harpoon:setup()
+    --
+    --   local function map(mode, l, r, opts)
+    --     opts = opts or {}
+    --     vim.keymap.set(mode, l, r, opts)
+    --   end
+    --
+    --   map('n', '<leader>he', function()
+    --     harpoon.ui:toggle_quick_menu(harpoon:list(), {
+    --       ui_width_ratio = 0.8,
+    --     })
+    --   end, { desc = '[H]arpoon [E]ditor' })
+    --
+    --   map('n', '<leader>a', function()
+    --     harpoon:list():add()
+    --   end, { desc = '[A]dd to Harpoon' })
+    --
+    --   for i = 1, 9 do
+    --     map('n', '<leader>' .. i, function()
+    --       harpoon:list():select(i)
+    --     end, { desc = 'Harpoon: Navigate to [' .. i .. ']' })
+    --   end
+    --
+    --   map({ 'n', 'i' }, '<C-j>', function()
+    --     harpoon:list():next {
+    --       ui_nav_wrap = true,
+    --     }
+    --   end, { desc = 'Next buffer stored within Harpoon list' })
+    --
+    --   map({ 'n', 'i' }, '<C-k>', function()
+    --     harpoon:list():prev {
+    --       ui_nav_wrap = true,
+    --     }
+    --   end, { desc = 'Previous buffer stored within Harpoon list' })
+    -- end,
   },
   {
     'akinsho/toggleterm.nvim',
