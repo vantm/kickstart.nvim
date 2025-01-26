@@ -80,19 +80,18 @@ return {
         require('harpoon.mark').add_file()
       end, { desc = '[A]dd to Harpoon' })
 
-      for i = 1, 9 do
-        map('n', '<leader>' .. i, function()
-          require('harpoon.ui').nav_file(i)
-        end, { desc = 'Harpoon: Navigate to [' .. i .. ']' })
-      end
-
-      map({ 'n', 'i' }, '<C-j>', function()
-        require('harpoon.ui').nav_next()
-      end, { desc = 'Next buffer stored within Harpoon list' })
-
-      map({ 'n', 'i' }, '<C-k>', function()
-        require('harpoon.ui').nav_prev()
-      end, { desc = 'Previous buffer stored within Harpoon list' })
+      map('n', '<c-h><c-h>', function()
+        require('harpoon.ui').nav_file(1)
+      end)
+      map('n', '<c-h><c-j>', function()
+        require('harpoon.ui').nav_file(2)
+      end)
+      map('n', '<c-h><c-k>', function()
+        require('harpoon.ui').nav_file(3)
+      end)
+      map('n', '<c-h><c-l>', function()
+        require('harpoon.ui').nav_file(4)
+      end)
     end,
     -- init = function()
     --   local harpoon = require 'harpoon'
