@@ -90,16 +90,16 @@ return {
         require('harpoon.mark').add_file()
       end, { desc = '[A]dd to Harpoon' })
 
-      map('n', '<c-h><c-h>', function()
+      map('n', '<leader>1', function()
         require('harpoon.ui').nav_file(1)
       end)
-      map('n', '<c-h><c-j>', function()
+      map('n', '<leader>2', function()
         require('harpoon.ui').nav_file(2)
       end)
-      map('n', '<c-h><c-k>', function()
+      map('n', '<leader>3', function()
         require('harpoon.ui').nav_file(3)
       end)
-      map('n', '<c-h><c-l>', function()
+      map('n', '<leader>4', function()
         require('harpoon.ui').nav_file(4)
       end)
     end,
@@ -196,13 +196,5 @@ return {
       end,
     },
   },
-  {
-    'tpope/vim-fugitive',
-    -- cmd = { 'Git', 'Gdiffsplit', 'Gread', 'Gwrite', 'Ggrep', 'GMove', 'GDelete', 'GBrowse', 'GRemove', 'Gblame' },
-    -- keys = {
-    --   { '<leader>gs', ':Git<CR>', desc = 'Git status' },
-    --   { '<leader>gd', ':Gdiffsplit<CR>', desc = 'Git diff' },
-    --   { '<leader>gb', ':Git blame<CR>', desc = 'Git blame' },
-    -- },
-  },
+  { 'mfussenegger/nvim-jdtls' },
 }
