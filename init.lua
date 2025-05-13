@@ -940,7 +940,11 @@ require('lazy').setup({
         scss = { 'prettier' },
         sass = { 'prettier' },
         javascript = { 'prettier' },
+        javascriptreact = { 'prettier' },
+        jsx = { 'prettier' },
         typescript = { 'prettier' },
+        typescriptreact = { 'prettier' },
+        tsx = { 'prettier' },
         json = { 'prettier' },
         yaml = { 'prettier' },
 
