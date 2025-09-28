@@ -39,7 +39,7 @@ vim.o.signcolumn = 'yes'
 vim.o.updatetime = 250
 
 -- Decrease mapped sequence wait time
-vim.o.timeoutlen = 300
+vim.o.timeoutlen = 1000
 
 -- Configure how new splits should be opened
 vim.o.splitright = true
@@ -352,6 +352,10 @@ require('lazy').setup({
             },
           },
         },
+
+        jsonls = {},
+        
+        prettier = {},
 
         omnisharp = {
           cmd = { 'omnisharp' },

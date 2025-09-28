@@ -17,16 +17,6 @@ end
 
 setup_pwsh()
 
-local group = vim.api.nvim_create_augroup('http_file_autocommands', { clear = true })
-vim.api.nvim_create_autocmd('FileType', {
-  pattern = { 'http' },
-  callback = function(ev)
-    vim.api.nvim_buf_set_keymap(0, 'n', 'gx', ':Rest run<cr>', { noremap = true, silent = true })
-    vim.api.nvim_buf_set_keymap(0, 'n', 'gr', ':Rest open<cr>', { noremap = true, silent = true })
-  end,
-  group = group,
-})
-
 return {
   {
     'folke/flash.nvim',
@@ -63,7 +53,7 @@ return {
     'mbbill/undotree',
     init = function()
       vim.keymap.set('n', '<leader>u', vim.cmd.UndotreeToggle, { desc = 'Open the Undotree' })
-    end
+    end,
   },
   {
     'akinsho/toggleterm.nvim',
@@ -101,13 +91,16 @@ return {
   },
   -- { 'github/copilot.vim' },
   {
-    'rest-nvim/rest.nvim',
-    dependencies = {
-      'nvim-treesitter/nvim-treesitter',
-      opts = function(_, opts)
-        opts.ensure_installed = opts.ensure_installed or {}
-        table.insert(opts.ensure_installed, 'http')
-      end,
+    'mistweaverco/kulala.nvim',
+    ft = { 'http', 'rest' },
+    opts = {
+      global_keymaps = true,
+      lsp = {
+        keymaps = true,
+      },
+      ui = {
+        max_response_size = 1048576,
+      },
     },
   },
   { 'mfussenegger/nvim-jdtls' },
