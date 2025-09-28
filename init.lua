@@ -341,7 +341,7 @@ require('lazy').setup({
 
         pyright = {},
 
-        tsserver = {},
+        ts_ls = {},
 
         lua_ls = {
           settings = {
