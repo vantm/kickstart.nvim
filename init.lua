@@ -341,8 +341,6 @@ require('lazy').setup({
 
         pyright = {},
 
-        ts_ls = {},
-
         lua_ls = {
           settings = {
             Lua = {
@@ -387,6 +385,12 @@ require('lazy').setup({
           },
         },
       }
+
+      if vim.loop.os_uname().sysname == 'Linux' then
+        servers.tsserver = {}
+      else
+        servers.ts_ls = {}
+      end
 
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
