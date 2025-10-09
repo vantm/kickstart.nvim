@@ -104,4 +104,20 @@ return {
     },
   },
   { 'mfussenegger/nvim-jdtls' },
+  {
+    'rachartier/tiny-inline-diagnostic.nvim',
+    event = 'VeryLazy',
+    priority = 1000,
+    config = function()
+      require('tiny-inline-diagnostic').setup()
+
+      -- Disable default diagnostic
+      vim.diagnostic.config {
+        underline = false,
+        float = false,
+        virtual_lines = false,
+        virtual_text = false
+      }
+    end,
+  },
 }

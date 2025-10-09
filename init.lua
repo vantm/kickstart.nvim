@@ -91,7 +91,7 @@ vim.g.disable_autoformat = true
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 -- Diagnostic keymaps
--- vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
@@ -166,6 +166,9 @@ vim.keymap.set('v', '<A-j>', ":m'>+1<CR>gv=gv", { desc = 'Move the selected line
 vim.keymap.set('i', '<A-k>', '<C-o>:m-2<CR><C-o>==', { desc = 'Move the current line above' })
 vim.keymap.set('i', '<A-j>', '<C-o>:m+1<CR><C-o>==', { desc = 'Move the current line below' })
 
+-- Select language syntax
+vim.keymap.set('n', '<leader>ls', ':set syntax=', { desc = 'Choose a language syntax' })
+
 -- [[ Install `lazy.nvim` plugin manager ]]
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
@@ -227,7 +230,7 @@ require('lazy').setup({
           map('gd', vim.lsp.buf.definition, '[G]oto [D]efinition')
           map('gr', vim.lsp.buf.references, '[G]oto [R]eferences')
           map('gI', vim.lsp.buf.implementation, '[G]oto [I]mplementation')
-          map('<leader>D', vim.lsp.buf.type_definition, 'Type [D]efinition')
+          map('gD', vim.lsp.buf.type_definition, 'Type [D]efinition')
           map('<leader>lr', vim.lsp.buf.rename, '[L]anguage [R]ename')
           map('<leader>la', vim.lsp.buf.code_action, '[L]anguage [A]ction', { 'n', 'x' })
 
@@ -308,8 +311,6 @@ require('lazy').setup({
       -- See :help vim.diagnostic.Opts
       vim.diagnostic.config {
         severity_sort = true,
-        float = { border = 'rounded', source = 'if_many' },
-        underline = { severity = vim.diagnostic.severity.ERROR },
         signs = vim.g.have_nerd_font and {
           text = {
             [vim.diagnostic.severity.ERROR] = '󰅚 ',
@@ -318,19 +319,6 @@ require('lazy').setup({
             [vim.diagnostic.severity.HINT] = '󰌶 ',
           },
         } or {},
-        virtual_text = {
-          source = 'if_many',
-          spacing = 2,
-          format = function(diagnostic)
-            local diagnostic_message = {
-              [vim.diagnostic.severity.ERROR] = diagnostic.message,
-              [vim.diagnostic.severity.WARN] = diagnostic.message,
-              [vim.diagnostic.severity.INFO] = diagnostic.message,
-              [vim.diagnostic.severity.HINT] = diagnostic.message,
-            }
-            return diagnostic_message[diagnostic.severity]
-          end,
-        },
       }
 
       local capabilities = require('blink.cmp').get_lsp_capabilities()
@@ -352,7 +340,7 @@ require('lazy').setup({
         },
 
         jsonls = {},
-        
+
         prettier = {},
 
         omnisharp = {
